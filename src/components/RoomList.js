@@ -17,22 +17,22 @@ class RoomList extends Component {
     const currentKey= currentRoom && currentRoom.key;
     return (
       <div
-        className="w3-sidebar w3-light-grey w3-bar-block"
+        className="w3-sidebar w3-bar-block w3-border-right"
         style={{ width: "25%" }}
       >
         <div>
           <h3>Rooms</h3>
           <h3>{currentRoom && currentRoom.name}</h3>
-          <ul className="w3-ul w3-border">
+          
             {this.props.rooms.map(room => (
-              <li
+              <button
                 onClick={() => this.props.updateCurrentRoom(room.key)}
                 key={room.key}
-                className={room.key === currentKey?"w3-grey":""}
+                className={(room.key === currentKey?"w3-grey ":"") + "w3-bar-item w3-button"}
                 style={{ cursor: "pointer"}}
-              >{`${room.name}`}</li>
+              >{`${room.name}`}</button>
             ))}
-          </ul>
+
         </div>
         <fieldset style={{ margin: " auto", display: "inline" }}>
           <legend>Add New Room</legend>

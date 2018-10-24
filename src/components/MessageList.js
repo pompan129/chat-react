@@ -15,33 +15,29 @@ class MessageList extends Component {
       const msg = snapshot.val();
       msg.key = snapshot.key;
       this.setState({
-        messages: this.state.messages.concat(msg),
+        messages: this.state.messages.concat(msg)
       });
     });
   }
 
-  createMessage() {
-    const now = new Date(Date.now());
-    this.messagesRef.push({
-        username: "max",
-        content: `this is a ${this.props.roomTitle} message from ` + now.toString().split(" ").slice(0,5).join(" "),
-        sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-        roomId: this.props.roomKey
-    });
-  }
-
   render() {
-      console.log("MessageList",this.props,this.state, roomKey)
-      const {roomKey} = this.props;
+    console.log("MessageList", this.props, this.state, roomKey);
+    const { roomKey } = this.props;
     return (
-      <div>
+      <div style={{ marginLeft: "25%", textAlign: 'left' }}>
         <h3>{`${this.props.roomTitle} messages`}</h3>
-        <ul>
-          {this.state.messages.filter(msg=>msg.roomId === roomKey).map(msg => (
-            <li key={msg.key}>{`${msg.username} msg:${msg.content} roomID:${msg.roomId}`}</li>
-          ))}
+        <ul className="w3-ul w3-border w3-padding">
+          {this.state.messages
+            .filter(msg => msg.roomId === roomKey)
+            .map(msg => (
+              <li key={msg.key} className="w3-padding-small">
+              <div className="w3-display-container w3-padding"><span className="w3-display-left"><b>{msg.username}</b></span><span className="w3-display-right">{msg.sentAt}</span></div>
+              <div className="w3-section">
+                 { msg.content}
+              </div>
+             </li>
+            ))}
         </ul>
-        <button onClick={()=>this.createMessage()}>make message</button>
       </div>
     );
   }
