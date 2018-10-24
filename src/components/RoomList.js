@@ -4,43 +4,39 @@ class RoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: [],
       newRoomName: ""
     };
-    this.roomsRef = this.props.firebase.database().ref("rooms");
   }
 
-  componentDidMount() {
-    this.roomsRef.on("child_added", snapshot => {
-      const room = snapshot.val();
-      room.key = snapshot.key;
-      this.setState({ rooms: this.state.rooms.concat(room) });
-    });
-  }
-
-  createRoom() {
-    this.roomsRef.push({
-      name: this.state.newRoomName
-    });
-  }
   handleChange(e) {
     this.setState({ newRoomName: e.target.value });
   }
 
   render() {
+    const { currentRoom } = this.props;
+    const currentKey= currentRoom && currentRoom.key;
     return (
-      <div>
+      <div
+        className="w3-sidebar w3-light-grey w3-bar-block"
+        style={{ width: "25%" }}
+      >
         <div>
-          <h3>Room List</h3>
-          <ul>
-            {this.state.rooms.map(room => (
-              <li key={room.key}>{room.name}</li>
+          <h3>Rooms</h3>
+          <h3>{currentRoom && currentRoom.name}</h3>
+          <ul className="w3-ul w3-border">
+            {this.props.rooms.map(room => (
+              <li
+                onClick={() => this.props.updateCurrentRoom(room.key)}
+                key={room.key}
+                className={room.key === currentKey?"w3-grey":""}
+                style={{ cursor: "pointer"}}
+              >{`${room.name}`}</li>
             ))}
           </ul>
         </div>
         <fieldset style={{ margin: " auto", display: "inline" }}>
           <legend>Add New Room</legend>
-          <form onSubmit={e => this.createRoom(e)}>
+          <form onSubmit={e => this.props.createRoom(this.state.newRoomName)}>
             <div style={{ display: "flex" }}>
               <label htmlFor="new-room" style={{ marginRight: "5px" }}>
                 Name
