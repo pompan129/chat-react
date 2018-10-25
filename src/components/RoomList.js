@@ -14,29 +14,39 @@ class RoomList extends Component {
 
   render() {
     const { currentRoom } = this.props;
-    const currentKey= currentRoom && currentRoom.key;
+    const currentKey = currentRoom && currentRoom.key;
     return (
       <div
         className="w3-sidebar w3-bar-block w3-border-right"
         style={{ width: "25%" }}
       >
-        <div>
-          <h3>Rooms</h3>
-          <h3>{currentRoom && currentRoom.name}</h3>
-          
-            {this.props.rooms.map(room => (
-              <button
-                onClick={() => this.props.updateCurrentRoom(room.key)}
-                key={room.key}
-                className={(room.key === currentKey?"w3-grey ":"") + "w3-bar-item w3-button"}
-                style={{ cursor: "pointer"}}
-              >{`${room.name}`}</button>
-            ))}
+        <h3 className="w3-bar-item">Rooms</h3>
+        <h4 className="w3-bar-item">{currentRoom && currentRoom.name}</h4>
 
-        </div>
-        <fieldset style={{ margin: " auto", display: "inline" }}>
+        {this.props.rooms.map(room => (
+          <button
+            onClick={() => this.props.updateCurrentRoom(room.key)}
+            key={room.key}
+            className={
+              (room.key === currentKey ? "w3-grey " : "") +
+              "w3-bar-item w3-button"
+            }
+            style={{ cursor: "pointer" }}
+          >{`${room.name}`}</button>
+        ))}
+
+        <fieldset
+          style={{ margin: " auto", display: "inline" }}
+          className="w3-bar-item w3-border"
+        >
           <legend>Add New Room</legend>
-          <form onSubmit={e => this.props.createRoom(this.state.newRoomName)}>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              this.props.createRoom(this.state.newRoomName);
+              this.setState({ newRoomName: "" });
+            }}
+          >
             <div style={{ display: "flex" }}>
               <label htmlFor="new-room" style={{ marginRight: "5px" }}>
                 Name
