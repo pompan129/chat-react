@@ -17,19 +17,17 @@ class RoomList extends Component {
     const currentKey = currentRoom && currentRoom.key;
     return (
       <div
-        className="w3-sidebar w3-bar-block w3-border-right"
+        className="w3-sidebar w3-bar-block w3-border-right w3-theme-d2"
         style={{ width: "25%" }}
       >
-        <h3 className="w3-bar-item">Rooms</h3>
-        <h4 className="w3-bar-item">{currentRoom && currentRoom.name}</h4>
-
-        {this.props.rooms.map(room => (
+        <h3 className="w3-bar-item w3-center " style={{fontWeight:"bold"}}>Rooms</h3>
+        {this.props.rooms.map(room => ( 
           <button
             onClick={() => this.props.updateCurrentRoom(room.key)}
             key={room.key}
             className={
-              (room.key === currentKey ? "w3-grey " : "") +
-              "w3-bar-item w3-button"
+              (room.key === currentKey ? "w3-theme-l2 " : "w3-theme-l1 ") +
+              "w3-bar-item w3-button w3-hover-theme"
             }
             style={{ cursor: "pointer" }}
           >{`${room.name}`}</button>

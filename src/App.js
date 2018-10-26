@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import RoomList from "./components/RoomList";
 import MessageList from "./components/MessageList";
+import UserAuth from "./components/User";
 import firebase from "./config";
+
 import "./App.css";
 
 class App extends Component {
@@ -22,7 +24,7 @@ class App extends Component {
         rooms: this.state.rooms.concat(room)
       });
     });
-    //firebase value events are always triggered last so state.rooms will be populated 
+    //firebase value events are always triggered last so state.rooms will be populated
     //now if there are any rooms
     this.roomsRef.once("value", snap => {
       this.setState({ currentRoom: this.state.rooms[0] });
@@ -42,23 +44,32 @@ class App extends Component {
     this.setState({ currentRoom: room });
   }
 
+  setUser(user) {
+    this.setState({ user });
+  }
+
   render() {
     const currentRoom = this.state.currentRoom;
     return (
       <div className="App">
-        <div>
-          <RoomList
-            rooms={this.state.rooms}
-            createRoom={name => this.createRoom(name)}
-            currentRoom={this.state.currentRoom}
-            updateCurrentRoom={key => this.updateCurrentRoom(key)}
-          />
-          <MessageList
-            firebase={firebase}
-            roomTitle={currentRoom && currentRoom.name}
-            roomKey={currentRoom && currentRoom.key}
-          />
-        </div>
+        <RoomList
+          rooms={this.state.rooms}
+          createRoom={name => this.createRoom(name)}
+          currentRoom={this.state.currentRoom}
+          updateCurrentRoom={key => this.updateCurrentRoom(key)}
+        />
+        <UserAuth
+          user={this.state.user}
+          firebase={firebase}
+          setUser={user => {
+            this.setUser(user);
+          }}
+        />
+        <MessageList
+          firebase={firebase}
+          roomTitle={currentRoom && currentRoom.name}
+          roomKey={currentRoom && currentRoom.key}
+        />
       </div>
     );
   }

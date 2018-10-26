@@ -23,8 +23,13 @@ class MessageList extends Component {
   render() {
     const { roomKey } = this.props;
     return (
-      <div style={{ marginLeft: "25%", textAlign: "left" }}>
-        <h3 style={{textAlign:"center"}}>{`${this.props.roomTitle} messages`}</h3>
+      <div
+        className="w3-text-theme"
+        style={{ textAlign: "left", marginLeft: "25%", paddingTop: "70px" }}
+      >
+        <h4 style={{ textAlign: "center" }}>{`${
+          this.props.roomTitle
+        } messages`}</h4>
         <ul className="w3-ul w3-border w3-padding">
           {this.state.messages
             .filter(msg => msg.roomId === roomKey)
@@ -34,7 +39,9 @@ class MessageList extends Component {
                   <span className="w3-display-left">
                     <b>{msg.username}</b>
                   </span>
-                  <span className="w3-display-right">{new Date(msg.sentAt).toUTCString()}</span>
+                  <span className="w3-display-right">
+                    {new Date(msg.sentAt).toUTCString()}
+                  </span>
                 </div>
                 <div className="w3-section">{msg.content}</div>
               </li>
