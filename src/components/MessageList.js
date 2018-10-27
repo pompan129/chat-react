@@ -5,7 +5,7 @@ class MessageList extends Component {
     super(props);
     this.state = {
       messages: [],
-      newRoomName: ""
+      newMessage: ""
     };
     this.messagesRef = this.props.firebase.database().ref("messages");
   }
@@ -18,6 +18,23 @@ class MessageList extends Component {
         messages: this.state.messages.concat(msg)
       });
     });
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    console.log(this.state.newMessage,this.props.currentUser)
+    if(this.state.newMessage === ""){return}
+    this.messagesRef.push({ 
+      username: this.props.currentUser.displayName,
+      content: this.state.newMessage,
+      sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
+      roomId: this.props.roomKey,
+     });
+     this.setState({newMessage:""})
+  }
+
+  handleChange(e){
+      this.setState({newMessage:e.target.value})
   }
 
   render() {
@@ -47,6 +64,18 @@ class MessageList extends Component {
               </li>
             ))}
         </ul>
+        <div className="w3-bottom w3-theme-light w3-border-top">
+          <form className="w3-padding" style={{ display: "flex", width: "75%" }} onSubmit={e=>this.handleSubmit(e)}>
+            <input
+              className="w3-input w3-border"
+              placeholder="Write message here....."
+              type="text"
+              onChange={e=>this.handleChange(e)}
+              value={this.state.newMessage}
+            />
+            <input className="w3-button  w3-theme-d2" type="submit" />
+          </form>
+        </div>
       </div>
     );
   }

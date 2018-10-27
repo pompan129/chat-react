@@ -11,7 +11,8 @@ class App extends Component {
     super(props);
     this.state = {
       rooms: [],
-      currentRoom: undefined
+      currentRoom: undefined,
+      user: {displayName:"Guest"}
     };
     this.roomsRef = firebase.database().ref("rooms");
   }
@@ -69,6 +70,7 @@ class App extends Component {
           firebase={firebase}
           roomTitle={currentRoom && currentRoom.name}
           roomKey={currentRoom && currentRoom.key}
+          currentUser={this.state.user}
         />
       </div>
     );
