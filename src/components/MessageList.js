@@ -47,7 +47,7 @@ class MessageList extends Component {
         <h4 style={{ textAlign: "center" }}>{`${
           this.props.roomTitle
         } messages`}</h4>
-        <ul className="w3-ul w3-border w3-padding">
+        <ul className="w3-ul w3-border w3-padding" style={{marginBottom:"45px"}}>
           {this.state.messages
             .filter(msg => msg.roomId === roomKey)
             .map(msg => (
@@ -57,7 +57,7 @@ class MessageList extends Component {
                     <b>{msg.username}</b>
                   </span>
                   <span className="w3-display-right">
-                    {new Date(msg.sentAt).toUTCString()}
+                    {new Date(msg.sentAt).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="w3-section">{msg.content}</div>
