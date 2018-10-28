@@ -28,7 +28,7 @@ class UserAuth extends Component {
                   this.props.firebase.auth().signInWithPopup(this.provider)
                 }
               >
-                Sing In
+                Sign In
               </button>
             ) : (
               <button
