@@ -20,17 +20,25 @@ class RoomList extends Component {
         className="w3-sidebar w3-bar-block w3-border-right w3-theme-d2"
         style={{ width: "25%" }}
       >
-        <h3 className="w3-bar-item w3-center " style={{fontWeight:"bold"}}>Rooms</h3>
-        {this.props.rooms.map(room => ( 
-          <button
-            onClick={() => this.props.updateCurrentRoom(room.key)}
-            key={room.key}
-            className={
-              (room.key === currentKey ? "w3-theme-l2 " : "w3-theme-l1 ") +
-              "w3-bar-item w3-button w3-hover-theme"
-            }
-            style={{ cursor: "pointer" }}
-          >{`${room.name}`}</button>
+        <h3 className="w3-bar-item w3-center " style={{ fontWeight: "bold" }}>
+          Rooms
+        </h3>
+        {this.props.rooms.map(room => (
+          <div className="w3-bar-item" key={room.key} style={{padding:"0"}}>
+            <div  className={
+                  (room.key === currentKey ? "w3-theme-l2 " : "w3-theme-l1 ") +
+                  "w3-bar w3-hover-theme"
+                }>
+              <button
+                onClick={() => this.props.updateCurrentRoom(room.key)}
+                style={{width:"90%"}}
+                className="w3-button w3-hover-theme"
+              >{`${room.name}`}</button>
+              <button  onClick={() => this.props.deleteRoom(room.key)} className="w3-button" style={{width:"10%",backgroundColor:"rgba(0,0,0,0.1)"}}>
+              <i className="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
         ))}
 
         <fieldset

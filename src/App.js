@@ -30,6 +30,13 @@ class App extends Component {
     this.roomsRef.once("value", snap => {
       this.setState({ currentRoom: this.state.rooms[0] });
     });
+    this.roomsRef.on("child_removed", child  => {
+      const key = child.key;
+      const newRooms = this.state.rooms.filter(room=>room.key !== key)
+      this.setState({
+        rooms: newRooms
+      });
+    });
   }
 
   componentWillUnmount() {
@@ -38,6 +45,10 @@ class App extends Component {
 
   createRoom(name) {
     this.roomsRef.push({ name });
+  }
+
+  deleteRoom(key){
+    this.roomsRef.child(key).remove();
   }
 
   updateCurrentRoom(key) {
@@ -56,6 +67,7 @@ class App extends Component {
         <RoomList
           rooms={this.state.rooms}
           createRoom={name => this.createRoom(name)}
+          deleteRoom={key=>this.deleteRoom(key)}
           currentRoom={this.state.currentRoom}
           updateCurrentRoom={key => this.updateCurrentRoom(key)}
         />
