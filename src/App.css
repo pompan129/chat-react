@@ -28,3 +28,4 @@ html,body { margin:0; }
 .w3-hover-theme:hover {color:#fff !important; background-color:#2e4a62 !important}
 .w3-hover-text-theme:hover {color:#2e4a62 !important}
 .w3-hover-border-theme:hover {border-color:#2e4a62 !important}
+.w3-hover-theme-color-l5:hover { background-color:#f0f4f8 !important}

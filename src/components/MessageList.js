@@ -18,23 +18,35 @@ class MessageList extends Component {
         messages: this.state.messages.concat(msg)
       });
     });
+    this.messagesRef.on("child_removed", child  => {
+      const key = child.key;
+      const newMessages = this.state.messages.filter(msg=>msg.key !== key)
+      this.setState({
+        messages: newMessages
+      });
+    });
   }
 
-  handleSubmit(e){
+  handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state.newMessage,this.props.currentUser)
-    if(this.state.newMessage === ""){return}
-    this.messagesRef.push({ 
+    if (this.state.newMessage === "") {
+      return;
+    }
+    this.messagesRef.push({
       username: this.props.currentUser.displayName,
       content: this.state.newMessage,
       sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-      roomId: this.props.roomKey,
-     });
-     this.setState({newMessage:""})
+      roomId: this.props.roomKey
+    });
+    this.setState({ newMessage: "" });
   }
 
-  handleChange(e){
-      this.setState({newMessage:e.target.value})
+  deleteMessage(key){
+    this.messagesRef.child(key).remove();
+  }
+
+  handleChange(e) {
+    this.setState({ newMessage: e.target.value });
   }
 
   render() {
@@ -47,30 +59,44 @@ class MessageList extends Component {
         <h4 style={{ textAlign: "center" }}>{`${
           this.props.roomTitle
         } messages`}</h4>
-        <ul className="w3-ul w3-border w3-padding" style={{marginBottom:"45px"}}>
+        <ul className="w3-ul w3-border" style={{ marginBottom: "45px" }}>
           {this.state.messages
             .filter(msg => msg.roomId === roomKey)
             .map(msg => (
-              <li key={msg.key} className="w3-padding-small">
+              <li
+                key={msg.key}
+                className="w3-padding-small w3-hover-theme-color-l5"
+              >
                 <div className="w3-display-container w3-padding">
-                  <span className="w3-display-left">
-                    <b>{msg.username}</b>
-                  </span>
-                  <span className="w3-display-right">
-                    {new Date(msg.sentAt).toLocaleDateString()}
-                  </span>
+                  <button
+                    className="w3-display-position w3-display-hover w3-button w3-hover-theme"
+                    onClick={()=>this.deleteMessage(msg.key)}
+                    style={{ top: "-4px", right: "-8px" }}
+                  >
+                    X
+                  </button>
+                  <div className="w3-display-topleft">
+                    <span className="w3-margin-right w3-large">
+                      <b>{msg.username}</b>
+                    </span>
+                    <span>{new Date(msg.sentAt).toLocaleDateString()}</span>
+                  </div>
+                  <div className="w3-section">{msg.content}</div>
                 </div>
-                <div className="w3-section">{msg.content}</div>
               </li>
             ))}
         </ul>
         <div className="w3-bottom w3-theme-light w3-border-top">
-          <form className="w3-padding" style={{ display: "flex", width: "75%" }} onSubmit={e=>this.handleSubmit(e)}>
+          <form
+            className="w3-padding"
+            style={{ display: "flex", width: "75%" }}
+            onSubmit={e => this.handleSubmit(e)}
+          >
             <input
               className="w3-input w3-border"
               placeholder="Write message here....."
               type="text"
-              onChange={e=>this.handleChange(e)}
+              onChange={e => this.handleChange(e)}
               value={this.state.newMessage}
             />
             <input className="w3-button  w3-theme-d2" type="submit" />
