@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       rooms: [],
       currentRoom: undefined,
-      user: {displayName:"Guest"}
+      user: { displayName: "Guest" }
     };
     this.roomsRef = firebase.database().ref("rooms");
   }
@@ -30,11 +30,28 @@ class App extends Component {
     this.roomsRef.once("value", snap => {
       this.setState({ currentRoom: this.state.rooms[0] });
     });
-    this.roomsRef.on("child_removed", child  => {
+    this.roomsRef.on("child_removed", child => {
       const key = child.key;
-      const newRooms = this.state.rooms.filter(room=>room.key !== key)
+      const newRooms = this.state.rooms.filter(room => room.key !== key);
       this.setState({
         rooms: newRooms
+      });
+      this.setState({ currentRoom: this.state.rooms[0] });
+    });
+    this.roomsRef.on("child_changed", child => {
+      console.log("this.roomsRef.on(child_changed", child); //todo
+      const key = child.key;
+      let newRoom;
+      const newRooms = this.state.rooms.map(room => {
+        if (room.key === key) {
+          newRoom = { ...room, name: child.val().name };
+          return newRoom;
+        }
+        return room;
+      });
+      this.setState({
+        rooms: newRooms,
+        currentRoom: newRoom
       });
     });
   }
@@ -47,8 +64,12 @@ class App extends Component {
     this.roomsRef.push({ name });
   }
 
-  deleteRoom(key){
+  deleteRoom(key) {
     this.roomsRef.child(key).remove();
+  }
+
+  renameRoom(name, key) {
+    this.roomsRef.child(key).update({ name });
   }
 
   updateCurrentRoom(key) {
@@ -67,7 +88,7 @@ class App extends Component {
         <RoomList
           rooms={this.state.rooms}
           createRoom={name => this.createRoom(name)}
-          deleteRoom={key=>this.deleteRoom(key)}
+          deleteRoom={key => this.deleteRoom(key)}
           currentRoom={this.state.currentRoom}
           updateCurrentRoom={key => this.updateCurrentRoom(key)}
         />
@@ -81,6 +102,9 @@ class App extends Component {
         <MessageList
           firebase={firebase}
           roomTitle={currentRoom && currentRoom.name}
+          room={currentRoom}
+          renameRoom={(name, key) => this.renameRoom(name, key)}
+          deleteRoom={key => this.deleteRoom(key)}
           roomKey={currentRoom && currentRoom.key}
           currentUser={this.state.user}
         />

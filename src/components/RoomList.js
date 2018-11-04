@@ -31,12 +31,10 @@ class RoomList extends Component {
                 }>
               <button
                 onClick={() => this.props.updateCurrentRoom(room.key)}
-                style={{width:"90%"}}
-                className="w3-button w3-hover-theme"
+                //style={{width:"100%"}}
+                className="w3-button w3-hover-theme w3-block"
               >{`${room.name}`}</button>
-              <button  onClick={() => this.props.deleteRoom(room.key)} className="w3-button" style={{width:"10%",backgroundColor:"rgba(0,0,0,0.1)"}}>
-              <i className="fa fa-times" aria-hidden="true"></i>
-              </button>
+
             </div>
           </div>
         ))}

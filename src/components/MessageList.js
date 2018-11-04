@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import Modal from "./Modal-rename-room";
 
 class MessageList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
-      newMessage: ""
+      newMessage: "",
+      dropdownVisible: false,
+      displayModal: false
     };
     this.messagesRef = this.props.firebase.database().ref("messages");
   }
@@ -18,9 +21,9 @@ class MessageList extends Component {
         messages: this.state.messages.concat(msg)
       });
     });
-    this.messagesRef.on("child_removed", child  => {
+    this.messagesRef.on("child_removed", child => {
       const key = child.key;
-      const newMessages = this.state.messages.filter(msg=>msg.key !== key)
+      const newMessages = this.state.messages.filter(msg => msg.key !== key);
       this.setState({
         messages: newMessages
       });
@@ -41,7 +44,7 @@ class MessageList extends Component {
     this.setState({ newMessage: "" });
   }
 
-  deleteMessage(key){
+  deleteMessage(key) {
     this.messagesRef.child(key).remove();
   }
 
@@ -49,16 +52,75 @@ class MessageList extends Component {
     this.setState({ newMessage: e.target.value });
   }
 
+  handleDropdown() {
+    let visible = this.state.dropdownVisible;
+    this.setState({ dropdownVisible: !visible });
+  }
+
+  toggleModalDisplay() {
+    let visible = this.state.displayModal;
+    this.setState({ displayModal: !visible });
+  }
+
   render() {
-    const { roomKey } = this.props;
+    const { roomKey, room } = this.props;
     return (
       <div
         className="w3-text-theme"
         style={{ textAlign: "left", marginLeft: "25%", paddingTop: "70px" }}
       >
-        <h4 style={{ textAlign: "center" }}>{`${
-          this.props.roomTitle
-        } messages`}</h4>
+        <div className="room-title w3-container">
+          <h4 className="w3-text-theme w3-margin-left w3-left">
+            <b>{`${room && room.name} messages`}</b>
+          </h4>
+          <div className="w3-right w3-dropdown-click w3-hover-theme">
+            <button
+              className="w3-button w3-hover-theme"
+              onClick={() => this.handleDropdown()}
+            >
+              <i className="fa fa-cog" aria-hidden="true" />
+            </button>
+            <div
+              className={
+                "w3-dropdown-content w3-bar-block w3-border" +
+                (this.state.dropdownVisible ? " w3-show " : "")
+              }
+              style={{ right: "0" }}
+            >
+              <button
+                className="w3-button w3-block w3-left-align w3-hover-theme"
+                onClick={() => this.props.deleteRoom(room.key)}
+              >
+                <span>
+                  <i
+                    className="fa fa-trash w3-margin-right"
+                    aria-hidden="true"
+                  />
+                  Delete Room
+                </span>
+              </button>
+              <button
+                className="w3-button w3-hover-theme w3-block w3-left-align"
+                onClick={e => this.toggleModalDisplay()}
+              >
+                <span>
+                  <i
+                    className="fa fa-pencil w3-margin-right"
+                    aria-hidden="true"
+                  />
+                  Rename
+                </span>
+              </button>
+              <Modal
+                display={this.state.displayModal}
+                toggleDisplay={e => this.toggleModalDisplay()}
+                roomName={room && room.name}
+                roomKey={room && room.key}
+                renameRoom={(name,key)=>this.props.renameRoom(name,key)}
+              />
+            </div>
+          </div>
+        </div>
         <ul className="w3-ul w3-border" style={{ marginBottom: "45px" }}>
           {this.state.messages
             .filter(msg => msg.roomId === roomKey)
@@ -69,11 +131,11 @@ class MessageList extends Component {
               >
                 <div className="w3-display-container w3-padding">
                   <button
-                    className="w3-display-position w3-display-hover w3-button w3-hover-theme"
-                    onClick={()=>this.deleteMessage(msg.key)}
+                    className="w3-display-position w3-display-hover w3-button w3-hover-text-only-theme-l2 w3-hover-border-theme"
+                    onClick={() => this.deleteMessage(msg.key)}
                     style={{ top: "-4px", right: "-8px" }}
                   >
-                    X
+                    <i className="fa fa-times" aria-hidden="true" />
                   </button>
                   <div className="w3-display-topleft">
                     <span className="w3-margin-right w3-large">
