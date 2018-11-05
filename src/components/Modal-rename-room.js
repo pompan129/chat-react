@@ -14,11 +14,11 @@ class Modal extends Component {
   }
 
   handleModalClick(e) {
-    //console.log("e.target == this.myRef",e.target == this.myRef.current)
     if (e.target === this.myRef.current) {
       this.props.toggleDisplay();
     }
   }
+  
   handleSubmit() {
     const { roomKey, renameRoom, toggleDisplay } = this.props;
     renameRoom(this.state.value, roomKey);

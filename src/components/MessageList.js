@@ -11,6 +11,7 @@ class MessageList extends Component {
       displayModal: false
     };
     this.messagesRef = this.props.firebase.database().ref("messages");
+    this.dropdownMenuRef = React.createRef();
   }
 
   componentDidMount() {
@@ -52,14 +53,42 @@ class MessageList extends Component {
     this.setState({ newMessage: e.target.value });
   }
 
-  handleDropdown() {
-    let visible = this.state.dropdownVisible;
-    this.setState({ dropdownVisible: !visible });
+  //listen for clicks outside dropdown menu
+  _listener=({ target }) =>{
+    if (!this.dropdownMenuRef.current.contains(target)) {
+      this.handleDropdown();
+    }
   }
+  handleDropdown() {
+    this.setState(
+      ({ dropdownVisible }) => ({ dropdownVisible: !dropdownVisible }),
 
+      () => {
+        if (this.state.dropdownVisible === true) {
+          document.addEventListener("click", this._listener);
+        } else {
+          document.removeEventListener("click", this._listener);
+        }
+      }
+    );
+  }
+  /*
+  showMenu(event) {
+    event.preventDefault();
+    
+    this.setState({ showMenu: true }, () => {
+      document.addEventListener('click', this.closeMenu);
+    });
+  }if 
+  
+  closeMenu() {
+    this.setState({ showMenu: false }, () => {
+      document.removeEventListener('click', this.closeMenu);
+    });
+  }
+*/
   toggleModalDisplay() {
-    let visible = this.state.displayModal;
-    this.setState({ displayModal: !visible });
+    this.setState(({ displayModal }) => ({ displayModal: !displayModal }));
   }
 
   render() {
@@ -81,6 +110,7 @@ class MessageList extends Component {
               <i className="fa fa-cog" aria-hidden="true" />
             </button>
             <div
+              ref={this.dropdownMenuRef}
               className={
                 "w3-dropdown-content w3-bar-block w3-border" +
                 (this.state.dropdownVisible ? " w3-show " : "")
@@ -116,7 +146,7 @@ class MessageList extends Component {
                 toggleDisplay={e => this.toggleModalDisplay()}
                 roomName={room && room.name}
                 roomKey={room && room.key}
-                renameRoom={(name,key)=>this.props.renameRoom(name,key)}
+                renameRoom={(name, key) => this.props.renameRoom(name, key)}
               />
             </div>
           </div>
