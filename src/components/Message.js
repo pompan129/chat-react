@@ -18,8 +18,9 @@ class Message extends Component {
   };
 
   toggleEdit() {
+      
     this.setState(
-      prevState => ({ edit: !prevState.edit, newMsg: false }),
+      prevState => ({ edit: !prevState.edit, newMsg: this.props.msg.content }),
       () => {
         if (this.state.edit === true) {
           document.addEventListener("click", this._listener);
@@ -91,7 +92,7 @@ class Message extends Component {
                 name="message"
                 type="text"
                 value={
-                  this.state.newMsg === false ? msg.content : this.state.newMsg
+                  this.state.newMsg 
                 }
                 onChange={e => this.handleChange(e)}
                 onKeyPress={e => this.handleKeyPress(e)}
