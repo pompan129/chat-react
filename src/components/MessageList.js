@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Modal from "./Modal-rename-room";
+import Message from "./Message";
 
 class MessageList extends Component {
   constructor(props) {
@@ -49,16 +50,20 @@ class MessageList extends Component {
     this.messagesRef.child(key).remove();
   }
 
+  editMessage(content, key) {
+    this.messagesRef.child(key).update({ content });
+  }
+
   handleChange(e) {
     this.setState({ newMessage: e.target.value });
   }
 
   //listen for clicks outside dropdown menu
-  _listener=({ target }) =>{
+  _listener = ({ target }) => {
     if (!this.dropdownMenuRef.current.contains(target)) {
       this.handleDropdown();
     }
-  }
+  };
   handleDropdown() {
     this.setState(
       ({ dropdownVisible }) => ({ dropdownVisible: !dropdownVisible }),
@@ -72,21 +77,7 @@ class MessageList extends Component {
       }
     );
   }
-  /*
-  showMenu(event) {
-    event.preventDefault();
-    
-    this.setState({ showMenu: true }, () => {
-      document.addEventListener('click', this.closeMenu);
-    });
-  }if 
-  
-  closeMenu() {
-    this.setState({ showMenu: false }, () => {
-      document.removeEventListener('click', this.closeMenu);
-    });
-  }
-*/
+
   toggleModalDisplay() {
     this.setState(({ displayModal }) => ({ displayModal: !displayModal }));
   }
@@ -118,7 +109,7 @@ class MessageList extends Component {
               style={{ right: "0" }}
             >
               <button
-                className="w3-button w3-block w3-left-align w3-hover-theme"
+                className="w3-button w3-block w3-left-align danger-hover"
                 onClick={() => this.props.deleteRoom(room.key)}
               >
                 <span>
@@ -155,27 +146,12 @@ class MessageList extends Component {
           {this.state.messages
             .filter(msg => msg.roomId === roomKey)
             .map(msg => (
-              <li
+              <Message
+                editMessage={(content, key) => this.editMessage(content, key)}
                 key={msg.key}
-                className="w3-padding-small w3-hover-theme-color-l5"
-              >
-                <div className="w3-display-container w3-padding">
-                  <button
-                    className="w3-display-position w3-display-hover w3-button w3-hover-text-only-theme-l2 w3-hover-border-theme"
-                    onClick={() => this.deleteMessage(msg.key)}
-                    style={{ top: "-4px", right: "-8px" }}
-                  >
-                    <i className="fa fa-times" aria-hidden="true" />
-                  </button>
-                  <div className="w3-display-topleft">
-                    <span className="w3-margin-right w3-large">
-                      <b>{msg.username}</b>
-                    </span>
-                    <span>{new Date(msg.sentAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="w3-section">{msg.content}</div>
-                </div>
-              </li>
+                msg={msg}
+                deleteMessage={key => this.deleteMessage(key)}
+              />
             ))}
         </ul>
         <div className="w3-bottom w3-theme-light w3-border-top">
