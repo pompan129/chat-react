@@ -82,13 +82,22 @@ class Message extends Component {
                 value={
                   this.state.newMsg === false ? msg.content : this.state.newMsg
                 }
-                onChange={e=>this.handleChange(e)}
+                onChange={e => this.handleChange(e)}
               />
               <div className="w3-bar">
-                <button className="w3-bar-item w3-button w3-hover-theme w3-border-theme" onClick={() => editMessage(this.state.newMsg,msg.key)}>
+                <button
+                  className="w3-bar-item w3-button w3-hover-theme w3-border-theme"
+                  onClick={() => {
+                    editMessage(this.state.newMsg, msg.key);
+                    this.toggleEdit();
+                  }}
+                >
                   Save
                 </button>
-                <button className="w3-bar-item w3-button danger-hover  w3-border-theme"     onClick={e=>this.toggleEdit()}>
+                <button
+                  className="w3-bar-item w3-button danger-hover  w3-border-theme"
+                  onClick={e => this.toggleEdit()}
+                >
                   Cancel
                 </button>
               </div>

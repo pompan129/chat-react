@@ -30,6 +30,21 @@ class MessageList extends Component {
         messages: newMessages
       });
     });
+    this.messagesRef.on("child_changed", child => {
+      console.log("child_changed",child.val(), child.key);//todo
+      const key = child.key;
+      let newMsg;
+      const newMsgs = this.state.messages.map(msg => {
+        if (msg.key === key) {
+          newMsg = { ...msg, content: child.val().content };
+          return newMsg;
+        }
+        return msg;
+      });
+      this.setState({
+        messages: newMsgs
+      });
+    });
   }
 
   handleSubmit(e) {
