@@ -31,9 +31,20 @@ class Message extends Component {
   }
 
   handleChange(e) {
+    if (e.keyCode == 13) {
+      this.props.editMessage(this.state.newMsg, this.props.msg.key);
+      this.toggleEdit();
+    }
     const value = e.target.value;
     this.setState(prevState => ({ newMsg: value }));
   }
+
+  handleKeyPress = event => {
+    if (event.key == "Enter") {
+      this.props.editMessage(this.state.newMsg, this.props.msg.key);
+      this.toggleEdit();
+    }
+  };
 
   render() {
     const { msg, deleteMessage, editMessage } = this.props;
@@ -83,6 +94,7 @@ class Message extends Component {
                   this.state.newMsg === false ? msg.content : this.state.newMsg
                 }
                 onChange={e => this.handleChange(e)}
+                onKeyPress={e => this.handleKeyPress(e)}
               />
               <div className="w3-bar">
                 <button
