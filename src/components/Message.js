@@ -49,12 +49,11 @@ class Message extends Component {
 
   render() {
     const { msg, deleteMessage, editMessage } = this.props;
-    console.log(this.state);
     return (
       <li key={msg.key} className="w3-padding-small w3-hover-theme-color-l5">
         <div className="w3-display-container w3-padding" ref={this.msgRef}>
           <div
-            className="w3-display-position w3-display-hover w3-hover-text-only-theme-l2"
+            className="w3-display-position w3-display-hover"
             style={{
               top: "0",
               right: "-4px",
@@ -63,14 +62,14 @@ class Message extends Component {
             }}
           >
             <button
-              className="w3-button"
+              className="w3-button w3-hover-text-only-theme-l2"
               onClick={e => this.toggleEdit()}
               style={{ padding: "3px" }}
             >
               <i className="fa fa-pencil" aria-hidden="true" />
             </button>
             <button
-              className="w3-button"
+              className="w3-button w3-hover-text-only-theme-l2"
               onClick={() => deleteMessage(msg.key)}
               style={{ padding: "3px" }}
             >
