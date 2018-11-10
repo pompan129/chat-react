@@ -32,7 +32,7 @@ class Message extends Component {
   }
 
   handleChange(e) {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       this.props.editMessage(this.state.newMsg, this.props.msg.key);
       this.toggleEdit();
     }
@@ -41,7 +41,7 @@ class Message extends Component {
   }
 
   handleKeyPress = event => {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
       this.props.editMessage(this.state.newMsg, this.props.msg.key);
       this.toggleEdit();
     }
